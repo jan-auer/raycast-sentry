@@ -1,5 +1,5 @@
 import { Icon, LaunchType, MenuBarExtra, launchCommand, open } from "@raycast/api";
-import { useOrganizations } from "./hooks/useOrganizations";
+import { useOrganization, useOrganizations } from "./hooks/useOrganizations";
 import { useIssues } from "./hooks/useIssues";
 import { issueIcon } from "./components/Issue";
 
@@ -17,10 +17,9 @@ function truncate(input: string, length: number): string {
 
 export default function Command() {
   const { data: organizations } = useOrganizations();
+  const [organization, setOrganization] = useOrganization();
 
-  const organization = organizations?.length ? organizations[0] : null;
   const { data: issues, isLoading: issuesLoading } = useIssues(organization);
-
   const isLoading = !organization || issuesLoading;
 
   const more = issues && issues.length > 10 ? issues.length - 10 : false;
@@ -38,6 +37,16 @@ export default function Command() {
         shortcut={{ modifiers: ["cmd"], key: "o" }}
         onAction={() => launchIssuesCommand()}
       />
+      <MenuBarExtra.Submenu title="Switch Organization">
+        {organizations?.map((org) => (
+          <MenuBarExtra.Item
+            key={org.id}
+            title={org.name}
+            icon={organization?.id == org.id ? Icon.Check : ""}
+            onAction={() => setOrganization(org)}
+          />
+        ))}
+      </MenuBarExtra.Submenu>
       {truncated && (
         <MenuBarExtra.Section title="Unresolved Issues">
           {truncated.map((issue) => (

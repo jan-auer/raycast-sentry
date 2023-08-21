@@ -1,18 +1,20 @@
 import { List } from "@raycast/api";
-import { useState } from "react";
 import Issue from "./components/Issue";
 import OrganizationDropdown from "./components/OrganizationDropdown";
-import { Organization } from "./api/base";
 import { useIssues } from "./hooks/useIssues";
+import { useOrganization } from "./hooks/useOrganizations";
 
 export default function Command() {
-  const [organization, setOrganization] = useState<Organization | null>(null);
+  const [organization, setOrganization] = useOrganization();
 
   const { data: issues, isLoading: issuesLoading } = useIssues(organization);
   const isLoading = !organization || issuesLoading;
 
   return (
-    <List isLoading={isLoading} searchBarAccessory={<OrganizationDropdown onSelect={setOrganization} />}>
+    <List
+      isLoading={isLoading}
+      searchBarAccessory={<OrganizationDropdown selected={organization} onSelect={setOrganization} />}
+    >
       {issues?.map((issue) => (
         <Issue key={issue.id} issue={issue} />
       ))}

@@ -1,4 +1,4 @@
-import { AsyncState, useCachedPromise } from "@raycast/utils";
+import { AsyncState, useCachedPromise, useCachedState } from "@raycast/utils";
 import { Organization, request } from "../api/base";
 
 type AvatarType = "upload" | "letter_avatar";
@@ -32,4 +32,8 @@ export function useOrganizations(): AsyncState<Organization[]> {
       url: organization.links.organizationUrl,
     }));
   });
+}
+
+export function useOrganization() {
+  return useCachedState<Organization | null>("organization", null);
 }

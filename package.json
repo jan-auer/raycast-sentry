@@ -21,7 +21,8 @@
       "name": "issues-menu",
       "title": "Issues Menu",
       "description": "See your Sentry issues at a glance",
-      "mode": "menu-bar"
+      "mode": "menu-bar",
+      "interval": "5m"
     }
   ],
   "preferences": [
