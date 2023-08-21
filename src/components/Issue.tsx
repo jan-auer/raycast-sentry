@@ -81,9 +81,13 @@ in \`${issue.metadata.filename}\`
               icon={issueIcon(issue.level)}
             />
           </Detail.Metadata.TagList>
-          <Detail.Metadata.Separator />
-          <Detail.Metadata.Link title="Evolution" target="https://www.pokemon.com/us/pokedex/pikachu" text="Raichu" />
         </Detail.Metadata>
+      }
+      actions={
+        <ActionPanel>
+          <Action.OpenInBrowser title="Open in Sentry" url={issue.permalink} />
+          <Action.CopyToClipboard title="Copy Permalink" content={issue.permalink} />
+        </ActionPanel>
       }
     />
   );
