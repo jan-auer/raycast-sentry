@@ -17,7 +17,7 @@ function issueColor(level: IssueLevel) {
   }
 }
 
-function issueIcon(level: IssueLevel) {
+export function issueIcon(level: IssueLevel) {
   if (level === "error") {
     return Icon.XMarkCircle;
   } else if (level === "warning") {

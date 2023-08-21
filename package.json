@@ -14,8 +14,14 @@
     {
       "name": "issues",
       "title": "Unresolved Issues",
-      "description": "List unresolved Sentry issues in your projects.",
+      "description": "List unresolved Sentry issues in your projects",
       "mode": "view"
+    },
+    {
+      "name": "issues-menu",
+      "title": "Issues Menu",
+      "description": "See your Sentry issues at a glance",
+      "mode": "menu-bar"
     }
   ],
   "preferences": [
