@@ -1,0 +1,50 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "sentry",
+  "title": "Sentry",
+  "description": "Work with Sentry errors, performance monitoring, and releases.",
+  "icon": "sentry.png",
+  "author": "jauer",
+  "categories": [
+    "Developer Tools"
+  ],
+  "license": "MIT",
+  "keywords": ["sentry", "dev", "developer", "error", "apm", "monitoring"],
+  "commands": [
+    {
+      "name": "issues",
+      "title": "Unresolved Issues",
+      "description": "List unresolved Sentry issues in your projects.",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "authToken",
+      "description": "Your Sentry auth token. You can find it in your account settings under 'User Auth Tokens'.",
+      "type": "password",
+      "required": true,
+      "title": "Sentry Token"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.57.1",
+    "@raycast/utils": "^1.9.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "1.0.5",
+    "@types/node": "18.8.3",
+    "@types/react": "18.0.9",
+    "eslint": "^7.32.0",
+    "prettier": "^2.5.1",
+    "typescript": "^4.4.3"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}
