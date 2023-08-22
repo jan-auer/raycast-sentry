@@ -12,6 +12,12 @@
   "keywords": ["sentry", "dev", "developer", "error", "apm", "monitoring"],
   "commands": [
     {
+      "name": "projects",
+      "title": "Search Projects",
+      "description": "Search Sentry projects and open them in your browser",
+      "mode": "view"
+    },
+    {
       "name": "issues",
       "title": "Unresolved Issues",
       "description": "List unresolved Sentry issues in your projects",
@@ -23,6 +29,12 @@
       "description": "See your Sentry issues at a glance",
       "mode": "menu-bar",
       "interval": "5m"
+    },
+    {
+      "name": "switch-organization",
+      "title": "Switch Organization",
+      "description": "Select the organization you want to work with",
+      "mode": "view"
     }
   ],
   "preferences": [

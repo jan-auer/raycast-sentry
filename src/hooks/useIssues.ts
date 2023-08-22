@@ -39,7 +39,10 @@ export function useIssues(organization: Organization | null): AsyncState<ApiIssu
         return [];
       }
 
-      const response = await request("issues/?limit=25&query=is%3Aunresolved&shortIdLookup=1", organization);
+      const response = await request(
+        `organizations/${organization.slug}/issues/?query=is%3Aunresolved&shortIdLookup=1`,
+        organization
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch Sentry issues");
       }

@@ -3,14 +3,16 @@ import { Organization, request } from "../api/base";
 
 type AvatarType = "upload" | "letter_avatar";
 
+type Avatar = {
+  avatarType: AvatarType;
+  avatarUuid?: string;
+};
+
 type ApiOrganization = {
   id: string;
   name: string;
   slug: string;
-  avatar: {
-    avatarType: AvatarType;
-    avatarUuid?: string;
-  };
+  avatar: Avatar;
   links: {
     organizationUrl: string;
     regionUrl: string;
@@ -30,6 +32,10 @@ export function useOrganizations(): AsyncState<Organization[]> {
       name: organization.name,
       slug: organization.slug,
       url: organization.links.organizationUrl,
+      avatar:
+        organization.avatar.avatarType === "upload"
+          ? `${organization.links.organizationUrl}/organization-avatar/${organization.avatar.avatarUuid}/`
+          : undefined,
     }));
   });
 }

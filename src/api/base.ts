@@ -1,16 +1,14 @@
 import { getPreferenceValues } from "@raycast/api";
-import fetch, { Response } from "node-fetch";
+import fetch, { RequestInit, Response } from "node-fetch";
 
 function getAuthToken(): string {
   const { authToken }: ExtensionPreferences = getPreferenceValues();
   return authToken;
 }
 
-function getAuthParams() {
+function getAuthHeaders() {
   return {
-    headers: {
-      Authorization: `Bearer ${getAuthToken()}`,
-    },
+    Authorization: `Bearer ${getAuthToken()}`,
   };
 }
 
@@ -19,11 +17,11 @@ export type Organization = {
   name: string;
   slug: string;
   url: string;
+  avatar?: string;
 };
 
-export function request(path: string, organization?: Organization): Promise<Response> {
-  const url = organization
-    ? `${organization.url}/api/0/organizations/${organization.slug}/${path}`
-    : `https://sentry.io/api/0/${path}`;
-  return fetch(url, getAuthParams());
+export function request(path: string, organization?: Organization, params: RequestInit = {}): Promise<Response> {
+  const url = organization ? `${organization.url}/api/0/${path}` : `https://sentry.io/api/0/${path}`;
+  const init = { ...params, headers: { ...params.headers, ...getAuthHeaders() } };
+  return fetch(url, init);
 }
