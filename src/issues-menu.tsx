@@ -37,8 +37,10 @@ function IssueSection({ title, data, isLoading }: IssueSectionProps) {
   const more = data.length > 10 ? data.length - 10 : false;
   const truncated = data.slice(0, 10);
 
+  const refreshing = data?.length && isLoading ? " (refreshing...)" : "";
+
   return (
-    <MenuBarExtra.Section title={title}>
+    <MenuBarExtra.Section title={title + refreshing}>
       {truncated.map((issue) => (
         <MenuBarExtra.Item
           key={issue.id}
