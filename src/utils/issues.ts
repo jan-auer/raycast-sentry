@@ -1,5 +1,5 @@
-import { Icon } from "@raycast/api";
-import { Assignee, IssueLevel } from "../hooks/useIssues";
+import { Color, Icon } from "@raycast/api";
+import { Assignee, IssueLevel, IssueSubstatus } from "../hooks/useIssues";
 
 export function issueColor(level: IssueLevel) {
   if (level === "error") {
@@ -44,4 +44,22 @@ export function assignee(assignee: Assignee | null) {
   }
 
   return assignee.type === "team" ? `${assignee.name} (Team)` : assignee.name;
+}
+
+export function substatusColor(substatus: IssueSubstatus) {
+  if (substatus === "escalating") {
+    return Color.Red;
+  } else if (substatus === "ongoing") {
+    return Color.SecondaryText;
+  } else if (substatus === "regressed") {
+    return Color.Purple;
+  } else if (substatus === "new") {
+    return Color.Yellow;
+  } else if (substatus === "archived_until_escalating") {
+    return Color.SecondaryText;
+  } else if (substatus === "archived_until_condition_met") {
+    return Color.SecondaryText;
+  } else if (substatus === "archived_forever") {
+    return Color.SecondaryText;
+  }
 }

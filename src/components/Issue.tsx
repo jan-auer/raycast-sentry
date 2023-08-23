@@ -1,15 +1,20 @@
 import { Action, ActionPanel, Color, Icon, List } from "@raycast/api";
-import { ApiIssue } from "../hooks/useIssues";
-import { assignee, assigneeIcon, issueColor, issueIcon } from "../utils/issues";
+import { ApiIssue, IssueSubstatus } from "../hooks/useIssues";
+import { assignee, assigneeIcon, issueColor, issueIcon, substatusColor } from "../utils/issues";
 import IssueDetails from "./IssueDetails";
 
 type IssueProps = {
   issue: ApiIssue;
 };
 
+function shouldRender(substatus: IssueSubstatus): boolean {
+  return substatus === "regressed" || substatus === "new" || substatus === "escalating";
+}
+
 export default function Issue({ issue }: IssueProps) {
   const accessories = [
-    issue.isUnhandled ? { tag: { value: "Unhandled", color: Color.Red } } : {},
+    shouldRender(issue.substatus) ? { tag: { value: issue.substatus, color: substatusColor(issue.substatus) } } : {},
+    issue.isUnhandled ? { tag: { value: "unhandled", color: Color.Orange } } : {},
     { tag: { value: issue.count.toString(), color: Color.SecondaryText }, tooltip: "Events (1h)", icon: Icon.Layers },
     { icon: assigneeIcon(issue.assignedTo), tooltip: assignee(issue.assignedTo) },
   ];

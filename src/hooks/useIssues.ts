@@ -4,6 +4,15 @@ import { URLSearchParams } from "url";
 
 export type IssueLevel = "error" | "warning" | "info";
 
+export type IssueSubstatus =
+  | "escalating"
+  | "ongoing"
+  | "regressed"
+  | "new"
+  | "archived_until_escalating"
+  | "archived_until_condition_met"
+  | "archived_forever";
+
 export type Assignee = {
   type: "user" | "team";
   id: string;
@@ -34,6 +43,7 @@ export type ApiIssue = {
   userCount: number;
   assignedTo: Assignee | null;
   isUnhandled: boolean;
+  substatus: IssueSubstatus;
 };
 
 export function useIssues(organization: Organization | null, projectId?: string | null): AsyncState<ApiIssue[]> {
