@@ -11,11 +11,18 @@ function shouldRender(substatus: IssueSubstatus): boolean {
   return substatus === "regressed" || substatus === "new" || substatus === "escalating";
 }
 
-export default function Issue({ issue }: IssueProps) {
+export default function IssueItem({ issue }: IssueProps) {
   const accessories = [
+    // Substatus
     shouldRender(issue.substatus) ? { tag: { value: issue.substatus, color: substatusColor(issue.substatus) } } : {},
+
+    // Unhandled
     issue.isUnhandled ? { tag: { value: "unhandled", color: Color.Orange } } : {},
+
+    // Event count
     { tag: { value: issue.count.toString(), color: Color.SecondaryText }, tooltip: "Events (1h)", icon: Icon.Layers },
+
+    // Assignee
     { icon: assigneeIcon(issue.assignedTo), tooltip: assignee(issue.assignedTo) },
   ];
 
