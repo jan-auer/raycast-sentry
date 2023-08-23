@@ -1,5 +1,6 @@
 import { AsyncState, useCachedPromise, useCachedState } from "@raycast/utils";
 import { Organization, request } from "../api/base";
+import { Dispatch, SetStateAction } from "react";
 
 type AvatarType = "upload" | "letter_avatar";
 
@@ -21,6 +22,8 @@ type ApiOrganization = {
 
 export function useOrganizations(): AsyncState<Organization[]> {
   return useCachedPromise(async () => {
+    console.debug("Loading organizations");
+
     const response = await request("organizations/");
     if (!response.ok) {
       throw new Error("Failed to fetch Sentry organizations");
@@ -40,6 +43,6 @@ export function useOrganizations(): AsyncState<Organization[]> {
   });
 }
 
-export function useOrganization() {
+export function useOrganization(): [Organization | null, Dispatch<SetStateAction<Organization | null>>] {
   return useCachedState<Organization | null>("organization", null);
 }

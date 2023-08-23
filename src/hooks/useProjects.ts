@@ -1,6 +1,7 @@
-import { AsyncState, useCachedPromise } from "@raycast/utils";
+import { AsyncState, useCachedPromise, useCachedState } from "@raycast/utils";
 import { Organization, request } from "../api/base";
 import { Toast, showToast } from "@raycast/api";
+import { Dispatch, SetStateAction } from "react";
 
 export type ProjectUrls = {
   details: string;
@@ -53,7 +54,8 @@ function projectUrls(organization: Organization, project: Project): ProjectUrls 
 
 export function useProjects(organization: Organization | null): AsyncState<Project[]> {
   return useCachedPromise(
-    async (organization) => {
+    async (orgId: string | undefined) => {
+      console.debug(`loading projects for organization ${organization?.slug} (${orgId})`);
       if (!organization) {
         return [];
       }
@@ -75,7 +77,7 @@ export function useProjects(organization: Organization | null): AsyncState<Proje
         urls: projectUrls(organization, project),
       }));
     },
-    [organization]
+    [organization?.id]
   );
 }
 
@@ -94,4 +96,8 @@ export async function toggleBookmark(organization: Organization, project: Projec
 
   project.isBookmarked = !project.isBookmarked;
   showToast(Toast.Style.Success, `Project ${project.slug} ${project.isBookmarked ? "starred" : "unstarred"}`);
+}
+
+export function useProject(): [string | null, Dispatch<SetStateAction<string | null>>] {
+  return useCachedState<string | null>("project", null);
 }

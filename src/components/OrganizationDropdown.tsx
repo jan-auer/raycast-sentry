@@ -1,10 +1,11 @@
 import { List } from "@raycast/api";
 import { Organization } from "../api/base";
 import { useOrganizations } from "../hooks/useOrganizations";
+import { Dispatch, SetStateAction } from "react";
 
 type OrganizationDropdownProps = {
   selected: Organization | null;
-  onSelect?: React.Dispatch<React.SetStateAction<Organization | null>>;
+  onSelect?: Dispatch<SetStateAction<Organization | null>>;
 };
 
 export default function OrganizationDropdown({ selected, onSelect }: OrganizationDropdownProps) {

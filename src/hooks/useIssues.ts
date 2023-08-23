@@ -1,5 +1,6 @@
 import { AsyncState, useCachedPromise } from "@raycast/utils";
 import { Organization, request } from "../api/base";
+import { URLSearchParams } from "url";
 
 export type IssueLevel = "error" | "warning" | "info";
 
@@ -32,17 +33,24 @@ export type ApiIssue = {
   assignedTo: Assignee | null;
 };
 
-export function useIssues(organization: Organization | null): AsyncState<ApiIssue[]> {
+export function useIssues(organization: Organization | null, projectId?: string | null): AsyncState<ApiIssue[]> {
   return useCachedPromise(
-    async (organization) => {
+    async (_, projectId: string) => {
       if (!organization) {
         return [];
       }
 
-      const response = await request(
-        `organizations/${organization.slug}/issues/?query=is%3Aunresolved&shortIdLookup=1`,
-        organization
-      );
+      console.debug(`loading issues for project ${projectId}`);
+
+      const url =
+        `organizations/${organization.slug}/issues/?` +
+        new URLSearchParams({
+          query: "is:unresolved",
+          shortIdLookup: "1",
+          project: projectId,
+        });
+
+      const response = await request(url, organization);
       if (!response.ok) {
         throw new Error("Failed to fetch Sentry issues");
       }
@@ -50,6 +58,6 @@ export function useIssues(organization: Organization | null): AsyncState<ApiIssu
       const issues = (await response.json()) as ApiIssue[];
       return issues;
     },
-    [organization]
+    [organization?.id, projectId || "-1"]
   );
 }

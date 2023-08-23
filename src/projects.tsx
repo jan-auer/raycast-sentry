@@ -16,16 +16,11 @@ function ProjectDetails({ project }: ProjectProps) {
 }
 
 function Project({ organization, project }: ProjectProps) {
-  const accessories = [];
-  if (project.isBookmarked) {
-    accessories.push({ icon: Icon.Star });
-  }
-
   return (
     <List.Item
       title={project.slug}
       icon={{ source: project.urls.platform }}
-      accessories={accessories}
+      accessories={project.isBookmarked ? [{ icon: Icon.Star }] : []}
       actions={
         <ActionPanel>
           <Action.Push
@@ -61,7 +56,6 @@ function Project({ organization, project }: ProjectProps) {
 
 export default function Command() {
   const [organization] = useOrganization();
-
   const { data, isLoading } = useProjects(organization);
 
   const starred = data?.filter((project) => project.isBookmarked);
