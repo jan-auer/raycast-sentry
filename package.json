@@ -24,6 +24,12 @@
       "mode": "view"
     },
     {
+      "name": "search",
+      "title": "Saved Searches",
+      "description": "Run saved and recommended Sentry searches for issues",
+      "mode": "view"
+    },
+    {
       "name": "issues-menu",
       "title": "Issues Menu",
       "description": "See escalating, regressed, and Sentry issues for review in your menu bar",
