@@ -1,7 +1,7 @@
 import { Icon, LaunchType, MenuBarExtra, launchCommand, open } from "@raycast/api";
 import { useOrganization, useOrganizations } from "./hooks/useOrganizations";
 import { useIssues } from "./hooks/useIssues";
-import { issueIcon } from "./components/Issue";
+import { issueIcon } from "./utils/issues";
 
 async function launchIssuesCommand(): Promise<void> {
   return launchCommand({ name: "issues", type: LaunchType.UserInitiated });
