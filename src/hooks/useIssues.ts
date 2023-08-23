@@ -48,9 +48,18 @@ export type ApiIssue = {
   substatus: IssueSubstatus;
 };
 
-export function useIssues(organization: Organization | null, projectId?: string | null): AsyncState<ApiIssue[]> {
+export const QUERY_UNRESOLVED = "is:unresolved";
+export const QUERY_REVIEW = "is:unresolved is:for_review assigned_or_suggested:[me, my_teams, none] ";
+export const QUERY_REGRESSED = "is:regressed";
+export const QUERY_ESCALATING = "is:escalating";
+
+export function useIssues(
+  organization: Organization | null,
+  query: string,
+  projectId?: string | null
+): AsyncState<ApiIssue[]> {
   return useCachedPromise(
-    async (_, projectId: string) => {
+    async (_, query, projectId: string) => {
       if (!organization) {
         return [];
       }
@@ -60,7 +69,7 @@ export function useIssues(organization: Organization | null, projectId?: string 
       const url =
         `organizations/${organization.slug}/issues/?` +
         new URLSearchParams({
-          query: "is:unresolved",
+          query: query,
           shortIdLookup: "1",
           statsPeriod: "1h",
           project: projectId,
@@ -78,6 +87,6 @@ export function useIssues(organization: Organization | null, projectId?: string 
         count: parseInt(issue.count.toString()),
       }));
     },
-    [organization?.id, projectId || "-1"]
+    [organization?.id, query, projectId || "-1"]
   );
 }

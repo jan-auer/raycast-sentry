@@ -1,6 +1,6 @@
 import { List } from "@raycast/api";
 import IssueItem from "./components/IssueItem";
-import { useIssues } from "./hooks/useIssues";
+import { QUERY_UNRESOLVED, useIssues } from "./hooks/useIssues";
 import { useOrganization } from "./hooks/useOrganizations";
 import ProjectDropdown from "./components/ProjectDropdown";
 import { useProject } from "./hooks/useProjects";
@@ -9,7 +9,7 @@ export default function Command() {
   const [organization] = useOrganization();
   const [project, setProject] = useProject();
 
-  const { data: issues, isLoading: issuesLoading } = useIssues(organization, project);
+  const { data: issues, isLoading: issuesLoading } = useIssues(organization, QUERY_UNRESOLVED, project);
   const isLoading = !organization || issuesLoading;
 
   const total = issues?.length === 100 ? "100+" : "" + (issues?.length || 0);
