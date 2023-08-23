@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Icon, Image, List, Toast, showToast, useNavigation } from "@raycast/api";
+import { Action, ActionPanel, Color, Icon, Image, List, Toast, showToast, useNavigation } from "@raycast/api";
 import { useOrganization, useOrganizations } from "./hooks/useOrganizations";
 import { Organization } from "./api/base";
 
@@ -8,7 +8,7 @@ export function organizationAvatar(organization: Organization) {
 
 export default function Command() {
   const { data, isLoading } = useOrganizations();
-  const [, setOrganization] = useOrganization();
+  const [organization, setOrganization] = useOrganization();
 
   const { pop } = useNavigation();
 
@@ -25,7 +25,10 @@ export default function Command() {
           key={org.id}
           title={org.name}
           icon={organizationAvatar(org)}
-          accessories={[{ text: org.slug }]}
+          accessories={[
+            organization?.id == org.id ? { tag: { value: "active", color: Color.Blue } } : {},
+            { text: org.slug },
+          ]}
           actions={
             <ActionPanel>
               <Action title="Switch Organization" onAction={() => selectOrg(org)} />
