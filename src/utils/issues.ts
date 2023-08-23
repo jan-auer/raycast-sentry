@@ -1,5 +1,5 @@
 import { Color, Icon } from "@raycast/api";
-import { Assignee, IssueLevel, IssueSubstatus } from "../hooks/useIssues";
+import { Assignee, IssueLevel, IssueSubstatus, IssueType } from "../hooks/useIssues";
 
 export function issueColor(level: IssueLevel) {
   if (level === "error") {
@@ -61,5 +61,21 @@ export function substatusColor(substatus: IssueSubstatus) {
     return Color.SecondaryText;
   } else if (substatus === "archived_forever") {
     return Color.SecondaryText;
+  }
+}
+
+export function issueType(type: IssueType) {
+  if (type === "default" || type === "error") {
+    return "Error";
+  } else if (type === "transaction") {
+    return "Performance";
+  } else if (type === "csp") {
+    return "Security (CSP)";
+  } else if (type === "hpkp") {
+    return "Security (HPKP)";
+  } else if (type === "expectct") {
+    return "Security (Expect CT)";
+  } else if (type === "expectstaple") {
+    return "Security (Expect Staple)";
   }
 }

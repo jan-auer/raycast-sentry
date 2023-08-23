@@ -1,6 +1,6 @@
 import { Action, ActionPanel, Color, Detail, Icon } from "@raycast/api";
 import { ApiIssue } from "../hooks/useIssues";
-import { assignee, assigneeIcon, issueColor, issueIcon, substatusColor } from "../utils/issues";
+import { assignee, assigneeIcon, issueColor, issueIcon, issueType, substatusColor } from "../utils/issues";
 
 type IssueDetailsProps = {
   issue: ApiIssue;
@@ -8,13 +8,16 @@ type IssueDetailsProps = {
 
 export default function IssueDetails({ issue }: IssueDetailsProps) {
   const markdown = `
-# ${issue.metadata.type}
-
-in \`${issue.metadata.filename}\`
-
-&nbsp;
+# ${issue.metadata.type || issue.title}
 
 > ${issue.metadata.value}
+
+#### Issue Category
+
+${issueType(issue.type)}
+
+${issue.metadata.function ? `#### Function\n\`${issue.metadata.function}\`` : ""}
+${issue.metadata.filename ? `#### Location\n${issue.metadata.filename}` : ""}
   `;
 
   return (

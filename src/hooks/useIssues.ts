@@ -3,6 +3,7 @@ import { Organization, request } from "../api/base";
 import { URLSearchParams } from "url";
 
 export type IssueLevel = "error" | "warning" | "info";
+export type IssueType = "error" | "default" | "csp" | "transaction" | "hpkp" | "expectct" | "expectstaple";
 
 export type IssueSubstatus =
   | "escalating"
@@ -26,6 +27,7 @@ export type ApiIssue = {
   title: string;
   culprit: string;
   permalink: string;
+  type: IssueType;
   level: IssueLevel;
   project: {
     id: string;
