@@ -12,14 +12,18 @@ export default function Command() {
   const { data: issues, isLoading: issuesLoading } = useIssues(organization, project);
   const isLoading = !organization || issuesLoading;
 
+  const total = issues?.length === 100 ? "100+" : "" + (issues?.length || 0);
+
   return (
     <List
       isLoading={isLoading}
       searchBarAccessory={<ProjectDropdown organization={organization} selected={project} onSelect={setProject} />}
     >
-      {issues?.map((issue) => (
-        <Issue key={issue.id} issue={issue} />
-      ))}
+      <List.Section title={`Trending · ${total}`}>
+        {issues?.map((issue) => (
+          <Issue key={issue.id} issue={issue} />
+        ))}
+      </List.Section>
     </List>
   );
 }

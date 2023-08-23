@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Detail, Icon, List } from "@raycast/api";
+import { Action, ActionPanel, Color, Detail, Icon, List } from "@raycast/api";
 import { ApiIssue, Assignee, IssueLevel } from "../hooks/useIssues";
 
 type IssueProps = {
@@ -95,7 +95,8 @@ in \`${issue.metadata.filename}\`
 
 export default function Issue({ issue }: IssueProps) {
   const accessories = [
-    { icon: Icon.Tray, text: issue.project.slug },
+    issue.isUnhandled ? { tag: { value: "Unhandled", color: Color.Red } } : {},
+    { tag: { value: issue.count.toString(), color: Color.SecondaryText }, tooltip: "Events (1h)", icon: Icon.Layers },
     { icon: assigneeIcon(issue.assignedTo), tooltip: assignee(issue.assignedTo) },
   ];
 
@@ -104,7 +105,6 @@ export default function Issue({ issue }: IssueProps) {
       id={issue.id}
       title={issue.title}
       icon={{ source: issueIcon(issue.level), tintColor: issueColor(issue.level) }}
-      subtitle={issue.shortId}
       actions={
         <ActionPanel>
           <Action.Push title="Show Details" target={<IssueDetails issue={issue} />} />

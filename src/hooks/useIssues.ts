@@ -30,7 +30,10 @@ export type ApiIssue = {
     filename: string;
     function: string;
   };
+  count: number;
+  userCount: number;
   assignedTo: Assignee | null;
+  isUnhandled: boolean;
 };
 
 export function useIssues(organization: Organization | null, projectId?: string | null): AsyncState<ApiIssue[]> {
@@ -47,7 +50,9 @@ export function useIssues(organization: Organization | null, projectId?: string 
         new URLSearchParams({
           query: "is:unresolved",
           shortIdLookup: "1",
+          statsPeriod: "1h",
           project: projectId,
+          sort: "priority",
         });
 
       const response = await request(url, organization);
@@ -56,7 +61,10 @@ export function useIssues(organization: Organization | null, projectId?: string 
       }
 
       const issues = (await response.json()) as ApiIssue[];
-      return issues;
+      return issues.map((issue) => ({
+        ...issue,
+        count: parseInt(issue.count.toString()),
+      }));
     },
     [organization?.id, projectId || "-1"]
   );
