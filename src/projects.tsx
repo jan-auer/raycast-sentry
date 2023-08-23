@@ -3,6 +3,7 @@ import { useOrganization } from "./hooks/useOrganizations";
 import { Project, useProjects } from "./hooks/useProjects";
 import { Organization } from "./api/base";
 import ProjectItem from "./components/ProjectItem";
+import OrganizationDropdown from "./components/OrganizationDropdown";
 
 type ProjectListProps = {
   organization: Organization | null;
@@ -25,7 +26,7 @@ function ProjectListSection({ organization, projects, title }: ProjectListProps)
 }
 
 export default function Command() {
-  const [organization] = useOrganization();
+  const [organization, setOrganization] = useOrganization();
   const { data, isLoading } = useProjects(organization);
 
   const starred = data?.filter((project) => project.isBookmarked);
@@ -33,7 +34,10 @@ export default function Command() {
   const other = data?.filter((project) => !project.isBookmarked && !project.isMember);
 
   return (
-    <List isLoading={isLoading}>
+    <List
+      isLoading={isLoading}
+      searchBarAccessory={<OrganizationDropdown selected={organization} onSelect={setOrganization} />}
+    >
       <ProjectListSection organization={organization} projects={starred} title="Starred" />
       <ProjectListSection organization={organization} projects={mine} title="My Projects" />
       <ProjectListSection organization={organization} projects={other} title="Other" />
