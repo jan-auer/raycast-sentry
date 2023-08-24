@@ -4,6 +4,7 @@ import { Organization, formatUrl } from "./api/base";
 import WithOrganization, { OrganizationProps } from "./components/WithOrganization";
 import { useProject } from "./hooks/useProjects";
 import ProjectDropdown from "./components/ProjectDropdown";
+import IssueSearch from "./components/IssueSearch";
 
 type SearchItemProps = {
   organization: Organization;
@@ -26,13 +27,20 @@ function SearchItem({ organization, project, search }: SearchItemProps) {
             title="Search Issues"
             icon={Icon.MagnifyingGlass}
             target={
-              <List>
-                <List.EmptyView title="Issue Search" description="Not implemented" icon={Icon.MagnifyingGlass} />
-              </List>
+              <IssueSearch
+                organization={organization}
+                setOrganization={() => undefined}
+                query={search.query}
+                navigationTitle={`Search: ${search.name}`}
+              />
             }
           />
           <Action.OpenInBrowser url={url} />
-          <Action.CopyToClipboard title="Copy Query" content={search.query} />
+          <Action.CopyToClipboard
+            title="Copy Query"
+            content={search.query}
+            shortcut={{ modifiers: ["cmd"], key: "." }}
+          />
         </ActionPanel>
       }
     />
