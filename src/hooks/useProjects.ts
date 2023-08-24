@@ -1,4 +1,4 @@
-import { AsyncState, useCachedPromise, useCachedState } from "@raycast/utils";
+import { useCachedPromise, useCachedState } from "@raycast/utils";
 import { Organization, request } from "../api/base";
 import { Toast, showToast } from "@raycast/api";
 import { Dispatch, SetStateAction } from "react";
@@ -52,7 +52,7 @@ function projectUrls(organization: Organization, project: Project): ProjectUrls 
   };
 }
 
-export function useProjects(organization: Organization | null): AsyncState<Project[]> {
+export function useProjects(organization: Organization | null) {
   return useCachedPromise(
     async (orgId: string | undefined) => {
       console.debug(`loading projects for organization ${organization?.slug} (${orgId})`);
@@ -84,17 +84,14 @@ export function useProjects(organization: Organization | null): AsyncState<Proje
 export async function toggleBookmark(organization: Organization, project: Project) {
   const response = await request(`projects/${organization.slug}/${project.slug}/`, organization, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ isBookmarked: !project.isBookmarked }),
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to set project star: ${response.status}`);
+    showToast(Toast.Style.Failure, `Failed to set project star: ${response.status}`);
   }
 
-  project.isBookmarked = !project.isBookmarked;
   showToast(Toast.Style.Success, `Project ${project.slug} ${project.isBookmarked ? "starred" : "unstarred"}`);
 }
 

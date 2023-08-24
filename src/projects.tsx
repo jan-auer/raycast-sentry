@@ -1,32 +1,43 @@
 import { List } from "@raycast/api";
-import { Project, useProjects } from "./hooks/useProjects";
-import { Organization } from "./api/base";
+import { Project, toggleBookmark, useProjects } from "./hooks/useProjects";
 import ProjectItem from "./components/ProjectItem";
 import OrganizationDropdown from "./components/OrganizationDropdown";
 import WithOrganization, { OrganizationProps } from "./components/WithOrganization";
 
 type ProjectListProps = {
-  organization: Organization | null;
   projects: Project[] | undefined;
   title: string;
+  onToggleBookmark: (projectId: string) => void;
 };
 
-function ProjectListSection({ organization, projects, title }: ProjectListProps) {
-  if (!organization || !projects || projects.length === 0) {
+function ProjectListSection({ projects, title, onToggleBookmark }: ProjectListProps) {
+  if (!projects || projects.length === 0) {
     return null;
   }
 
   return (
     <List.Section title={title}>
       {projects.map((project) => (
-        <ProjectItem key={project.id} organization={organization} project={project} />
+        <ProjectItem key={project.id} project={project} onToggleBookmark={() => onToggleBookmark(project.id)} />
       ))}
     </List.Section>
   );
 }
 
 function ProjectsCommand({ organization }: OrganizationProps) {
-  const { data, isLoading } = useProjects(organization);
+  const { data, isLoading, mutate } = useProjects(organization);
+
+  async function toggle(projectId: string) {
+    const project = data?.find((p) => p.id === projectId);
+
+    if (project) {
+      await mutate(toggleBookmark(organization, project), {
+        optimisticUpdate: (old) => old?.map((p) => (p.id === projectId ? { ...p, isBookmarked: !p.isBookmarked } : p)),
+        rollbackOnError: true,
+        shouldRevalidateAfter: false,
+      });
+    }
+  }
 
   const starred = data?.filter((project) => project.isBookmarked);
   const mine = data?.filter((project) => !project.isBookmarked && project.isMember);
@@ -34,9 +45,9 @@ function ProjectsCommand({ organization }: OrganizationProps) {
 
   return (
     <List isLoading={isLoading} searchBarAccessory={<OrganizationDropdown />}>
-      <ProjectListSection organization={organization} projects={starred} title="Starred" />
-      <ProjectListSection organization={organization} projects={mine} title="My Projects" />
-      <ProjectListSection organization={organization} projects={other} title="Other" />
+      <ProjectListSection projects={starred} title="Starred" onToggleBookmark={toggle} />
+      <ProjectListSection projects={mine} title="My Projects" onToggleBookmark={toggle} />
+      <ProjectListSection projects={other} title="Other" onToggleBookmark={toggle} />
     </List>
   );
 }

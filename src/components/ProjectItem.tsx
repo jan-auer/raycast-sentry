@@ -1,15 +1,15 @@
 import { Action, ActionPanel, Icon, List } from "@raycast/api";
-import { Project, toggleBookmark } from "../hooks/useProjects";
-import { Organization } from "../api/base";
+import { Project } from "../hooks/useProjects";
 
 type ProjectProps = {
-  organization: Organization;
   project: Project;
+  onToggleBookmark: () => void;
 };
 
-export default function ProjectItem({ organization, project }: ProjectProps) {
+export default function ProjectItem({ project, onToggleBookmark }: ProjectProps) {
   return (
     <List.Item
+      id={project.id}
       title={project.slug}
       icon={{ source: project.urls.platform }}
       accessories={project.isBookmarked ? [{ icon: Icon.Star }] : []}
@@ -25,13 +25,9 @@ export default function ProjectItem({ organization, project }: ProjectProps) {
           <ActionPanel.Section title="Settings">
             <Action.CopyToClipboard title="Copy Client Key (DSN)" content={"TODO"} />
             {project.isBookmarked ? (
-              <Action
-                title="Unstar Project"
-                icon={Icon.StarDisabled}
-                onAction={() => toggleBookmark(organization, project)}
-              />
+              <Action title="Unstar Project" icon={Icon.StarDisabled} onAction={onToggleBookmark} />
             ) : (
-              <Action title="Star Project" icon={Icon.Star} onAction={() => toggleBookmark(organization, project)} />
+              <Action title="Star Project" icon={Icon.Star} onAction={onToggleBookmark} />
             )}
             <Action.OpenInBrowser title="Open Settings" icon={Icon.Cog} url={project.urls.settings} />
           </ActionPanel.Section>
