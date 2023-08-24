@@ -1,21 +1,16 @@
 import { List } from "@raycast/api";
-import { Organization } from "../api/base";
-import { useOrganizations } from "../hooks/useOrganizations";
-import { Dispatch, SetStateAction } from "react";
+import { useOrganization, useOrganizations } from "../hooks/useOrganizations";
+import { organizationAvatar } from "../switch-organization";
 
-type OrganizationDropdownProps = {
-  selected: Organization | null;
-  onSelect?: Dispatch<SetStateAction<Organization | null>>;
-};
-
-export default function OrganizationDropdown({ selected, onSelect }: OrganizationDropdownProps) {
+export default function OrganizationDropdown() {
+  const [selected, setSelected] = useOrganization();
   const { data, isLoading } = useOrganizations();
   if (!data || data.length < 2) {
     return null;
   }
 
   const onChange = (id: string) => {
-    onSelect && onSelect(data.find((organization) => organization.id === id) || null);
+    setSelected(data.find((o) => o.id === id) || null);
   };
 
   return (
@@ -25,7 +20,7 @@ export default function OrganizationDropdown({ selected, onSelect }: Organizatio
           key={organization.id}
           title={organization.name}
           value={organization.id}
-          // TODO: Icon
+          icon={organizationAvatar(organization)}
         />
       ))}
     </List.Dropdown>

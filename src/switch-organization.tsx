@@ -6,20 +6,30 @@ export function organizationAvatar(organization: Organization) {
   return organization.avatar ? { source: organization.avatar, mask: Image.Mask.RoundedRectangle } : Icon.Window;
 }
 
-export default function Command() {
-  const { data, isLoading } = useOrganizations();
-  const [organization, setOrganization] = useOrganization();
+type SwitchOrganizationProps = {
+  isGuard?: boolean;
+};
 
+export default function Command({ isGuard }: SwitchOrganizationProps) {
   const { pop } = useNavigation();
+
+  const [organization, setOrganization] = useOrganization();
+  const { data, isLoading } = useOrganizations();
 
   function selectOrg(org: Organization) {
     setOrganization(org);
-    pop();
+    if (!isGuard) {
+      pop();
+    }
     showToast(Toast.Style.Success, `Switched to organization "${org.name}"`);
   }
 
+  const single = data?.length === 1;
+  const placeholder = single ? "Please confirm your Sentry organization..." : "Choose your Sentry organiation...";
+  const action = single ? "Confirm" : "Switch Organization";
+
   return (
-    <List isLoading={isLoading}>
+    <List isLoading={isLoading} searchBarPlaceholder={placeholder}>
       {data?.map((org) => (
         <List.Item
           key={org.id}
@@ -31,7 +41,7 @@ export default function Command() {
           ]}
           actions={
             <ActionPanel>
-              <Action title="Switch Organization" onAction={() => selectOrg(org)} />
+              <Action title={action} onAction={() => selectOrg(org)} />
             </ActionPanel>
           }
         />
