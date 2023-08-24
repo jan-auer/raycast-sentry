@@ -3,6 +3,7 @@ import { ApiIssue, IssueSubstatus } from "../hooks/useIssues";
 import { assignee, assigneeIcon, issueColor, issueIcon, substatusColor } from "../utils/issues";
 import IssueDetails from "./IssueDetails";
 import { platformUrl } from "../hooks/useProjects";
+import IssueActions from "./IssueActions";
 
 type IssueProps = {
   issue: ApiIssue;
@@ -41,9 +42,7 @@ export default function IssueItem({ issue, showProject }: IssueProps) {
       actions={
         <ActionPanel>
           <Action.Push title="Show Details" target={<IssueDetails issue={issue} />} />
-          <Action.OpenInBrowser title="Open in Sentry" url={issue.permalink} />
-          <Action.CopyToClipboard title="Copy Permalink" content={issue.permalink} />
-          <Action.CopyToClipboard title="Copy Issue ID" content={issue.shortId} />
+          <IssueActions issue={issue} />
         </ActionPanel>
       }
       accessories={accessories}

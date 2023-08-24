@@ -1,6 +1,7 @@
-import { Action, ActionPanel, Color, Detail, Icon } from "@raycast/api";
+import { ActionPanel, Color, Detail, Icon } from "@raycast/api";
 import { ApiIssue } from "../hooks/useIssues";
 import { assignee, assigneeIcon, issueColor, issueIcon, issueType, substatusColor } from "../utils/issues";
+import IssueActions from "./IssueActions";
 
 type IssueDetailsProps = {
   issue: ApiIssue;
@@ -54,8 +55,7 @@ ${issue.metadata.filename ? `#### Location\n${issue.metadata.filename}` : ""}
       }
       actions={
         <ActionPanel>
-          <Action.OpenInBrowser title="Open in Sentry" url={issue.permalink} />
-          <Action.CopyToClipboard title="Copy Permalink" content={issue.permalink} />
+          <IssueActions issue={issue} />
         </ActionPanel>
       }
     />
