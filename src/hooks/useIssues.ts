@@ -93,3 +93,39 @@ export function useIssues(
     [organization?.id, query, projectId || "-1"]
   );
 }
+
+type IssuesCount = {
+  "is:unresolved": number;
+  "is:regressed": number;
+  "is:escalating": number;
+  "is:archived": number;
+};
+
+export function useIssuesCount(organization: Organization, projectId: string) {
+  return useCachedPromise(
+    async (orgId: string, projectId: string) => {
+      console.debug(`loading issue stats for project ${projectId}`);
+
+      const url =
+        `organizations/${organization.slug}/issues-count/?` +
+        new URLSearchParams([
+          ["project", projectId],
+          ["query", "is:unresolved"],
+          ["query", "is:regressed"],
+          ["query", "is:escalating"],
+          ["query", "is:archived"],
+          ["statsPeriod", "1d"],
+        ]);
+
+      const response = await request(url, organization);
+      if (!response.ok) {
+        console.log(response);
+        throw new Error("Failed to fetch Sentry issue count");
+      }
+
+      const stats = (await response.json()) as IssuesCount;
+      return stats;
+    },
+    [organization.id, projectId]
+  );
+}

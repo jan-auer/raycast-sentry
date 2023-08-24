@@ -13,6 +13,12 @@ export type ProjectUrls = {
   settings: string;
 };
 
+export type Team = {
+  id: string;
+  slug: string;
+  name: string;
+};
+
 export type Project = {
   id: string;
   slug: string;
@@ -21,6 +27,7 @@ export type Project = {
   isBookmarked: boolean;
   isMember: boolean;
   urls: ProjectUrls;
+  teams: Team[];
 };
 
 function getPlatform(project: Project): string {
@@ -34,6 +41,10 @@ function getPlatform(project: Project): string {
 export function platformUrl(platform: string): string {
   if (platform === "other") {
     platform = "default";
+  }
+
+  if (platform === "native" || platform === "c") {
+    platform = "cpp";
   }
 
   return `https://raw.githubusercontent.com/getsentry/platformicons/master/svg_80x80/${platform}.svg`;
@@ -62,12 +73,8 @@ export function useProjects(organization: Organization) {
 
       const projects = (await response.json()) as Project[];
       return projects.map((project) => ({
-        id: project.id,
-        slug: project.slug,
-        platform: project.platform,
-        platforms: project.platforms,
-        isBookmarked: project.isBookmarked,
-        isMember: project.isMember,
+        ...project,
+        teams: project.teams.sort((a, b) => a.name.localeCompare(b.name)),
         urls: projectUrls(organization, project),
       }));
     },

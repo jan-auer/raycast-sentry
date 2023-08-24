@@ -29,8 +29,19 @@ export async function loadClientKeys(organization: Organization, project: Projec
   return (await response.json()) as ClientKey[];
 }
 
+export async function loadPrimaryDsn(organization: Organization, project: Project) {
+  const clientKeys = await loadClientKeys(organization, project);
+  const activeDsns = clientKeys.filter((key) => key.isActive);
+  if (!activeDsns.length) {
+    return null;
+  }
+
+  const key = activeDsns.find((key) => key.name === "Default") ?? activeDsns[0];
+  return key.dsn.public;
+}
+
 export function useClientKeys(organization: Organization, project: Project) {
-  useCachedPromise(
+  return useCachedPromise(
     async (orgId, projectId) => {
       console.log(`loading client keys for ${orgId}/${projectId}`);
       return loadClientKeys(organization, project);
