@@ -1,18 +1,16 @@
 import { List } from "@raycast/api";
 import IssueItem from "./components/IssueItem";
-import { QUERY_UNRESOLVED, useIssues } from "./hooks/useIssues";
-import { useOrganization } from "./hooks/useOrganizations";
+import { MAX_ISSUES, QUERY_UNRESOLVED, useIssues } from "./hooks/useIssues";
 import ProjectDropdown from "./components/ProjectDropdown";
 import { useProject } from "./hooks/useProjects";
+import WithOrganization, { OrganizationProps } from "./components/WithOrganization";
 
-export default function Command() {
-  const [organization] = useOrganization();
+function IssuesCommand({ organization }: OrganizationProps) {
   const [project, setProject] = useProject();
 
-  const { data: issues, isLoading: issuesLoading } = useIssues(organization, QUERY_UNRESOLVED, project);
-  const isLoading = !organization || issuesLoading;
-
-  const total = issues?.length === 100 ? "100+" : "" + (issues?.length || 0);
+  const { data: issues, isLoading } = useIssues(organization, QUERY_UNRESOLVED, project);
+  const count = issues?.length || 0;
+  const total = count == MAX_ISSUES ? MAX_ISSUES + "+" : count;
 
   return (
     <List
@@ -26,4 +24,8 @@ export default function Command() {
       </List.Section>
     </List>
   );
+}
+
+export default function Command() {
+  return <WithOrganization>{(props) => <IssuesCommand {...props} />}</WithOrganization>;
 }

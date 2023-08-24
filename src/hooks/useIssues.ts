@@ -2,6 +2,8 @@ import { AsyncState, useCachedPromise } from "@raycast/utils";
 import { Organization, request } from "../api/base";
 import { URLSearchParams } from "url";
 
+export const MAX_ISSUES = 100;
+
 export type IssueLevel = "error" | "warning" | "info";
 export type IssueType = "error" | "default" | "csp" | "transaction" | "hpkp" | "expectct" | "expectstaple";
 
@@ -74,6 +76,7 @@ export function useIssues(
           statsPeriod: "1h",
           project: projectId,
           sort: "priority",
+          limit: MAX_ISSUES.toString(),
         });
 
       const response = await request(url, organization);
