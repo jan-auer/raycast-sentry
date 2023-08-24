@@ -52,14 +52,10 @@ function projectUrls(organization: Organization, project: Project): ProjectUrls 
   };
 }
 
-export function useProjects(organization: Organization | null) {
+export function useProjects(organization: Organization) {
   return useCachedPromise(
-    async (orgId: string | undefined) => {
-      console.debug(`loading projects for organization ${organization?.slug} (${orgId})`);
-      if (!organization) {
-        return [];
-      }
-
+    async (orgId: string) => {
+      console.debug(`loading projects for organization ${organization.slug} (${orgId})`);
       const response = await request(`organizations/${organization.slug}/projects/`, organization);
       if (!response.ok) {
         throw new Error("Failed to fetch Sentry projects");
@@ -77,7 +73,7 @@ export function useProjects(organization: Organization | null) {
         urls: projectUrls(organization, project),
       }));
     },
-    [organization?.id]
+    [organization.id]
   );
 }
 

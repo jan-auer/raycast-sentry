@@ -28,7 +28,7 @@ function ProjectDropdownSection({ title, projects }: ProjectListProps) {
 }
 
 type ProjectDropdownProps = {
-  organization: Organization | null;
+  organization: Organization;
   selected: string | null;
   onSelect?: Dispatch<SetStateAction<string | null>>;
 };
