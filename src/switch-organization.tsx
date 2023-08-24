@@ -33,6 +33,7 @@ export default function Command({ isGuard }: SwitchOrganizationProps) {
       {data?.map((org) => (
         <List.Item
           key={org.id}
+          id={org.id}
           title={org.name}
           icon={organizationAvatar(org)}
           accessories={[

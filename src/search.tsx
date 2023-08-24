@@ -13,7 +13,7 @@ function SearchItem({ organization, search }: SearchItemProps) {
 
   return (
     <List.Item
-      key={search.id}
+      id={search.id}
       title={search.name}
       subtitle={search.query}
       icon={Icon.MagnifyingGlass}
