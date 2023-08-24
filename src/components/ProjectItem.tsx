@@ -1,12 +1,23 @@
-import { Action, ActionPanel, Icon, List } from "@raycast/api";
+import { Action, ActionPanel, Clipboard, Icon, List } from "@raycast/api";
 import { Project } from "../hooks/useProjects";
+import { loadClientKeys } from "../hooks/useClientKeys";
+import { Organization } from "../api/base";
 
 type ProjectProps = {
+  organization: Organization;
   project: Project;
   onToggleBookmark: () => void;
 };
 
-export default function ProjectItem({ project, onToggleBookmark }: ProjectProps) {
+export default function ProjectItem({ organization, project, onToggleBookmark }: ProjectProps) {
+  async function copyDsn() {
+    const clientKeys = await loadClientKeys(organization, project);
+    const dsn = clientKeys?.find((key) => key.isActive)?.dsn?.public;
+    if (dsn) {
+      await Clipboard.copy(dsn);
+    }
+  }
+
   return (
     <List.Item
       id={project.id}
@@ -23,7 +34,7 @@ export default function ProjectItem({ project, onToggleBookmark }: ProjectProps)
             <Action.OpenInBrowser title="Open Releases" icon={Icon.Layers} url={project.urls.releases} />
           </ActionPanel.Section>
           <ActionPanel.Section title="Settings">
-            <Action.CopyToClipboard title="Copy Client Key (DSN)" content={"TODO"} />
+            <Action title="Copy Client Key (DSN)" icon={Icon.Clipboard} onAction={copyDsn} />
             {project.isBookmarked ? (
               <Action title="Unstar Project" icon={Icon.StarDisabled} onAction={onToggleBookmark} />
             ) : (

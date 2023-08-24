@@ -3,14 +3,16 @@ import { Project, toggleBookmark, useProjects } from "./hooks/useProjects";
 import ProjectItem from "./components/ProjectItem";
 import OrganizationDropdown from "./components/OrganizationDropdown";
 import WithOrganization, { OrganizationProps } from "./components/WithOrganization";
+import { Organization } from "./api/base";
 
 type ProjectListProps = {
+  organization: Organization;
   projects: Project[] | undefined;
   title: string;
   onToggleBookmark: (projectId: string) => void;
 };
 
-function ProjectListSection({ projects, title, onToggleBookmark }: ProjectListProps) {
+function ProjectListSection({ organization, projects, title, onToggleBookmark }: ProjectListProps) {
   if (!projects || projects.length === 0) {
     return null;
   }
@@ -18,7 +20,12 @@ function ProjectListSection({ projects, title, onToggleBookmark }: ProjectListPr
   return (
     <List.Section title={title}>
       {projects.map((project) => (
-        <ProjectItem key={project.id} project={project} onToggleBookmark={() => onToggleBookmark(project.id)} />
+        <ProjectItem
+          key={project.id}
+          organization={organization}
+          project={project}
+          onToggleBookmark={() => onToggleBookmark(project.id)}
+        />
       ))}
     </List.Section>
   );
@@ -45,9 +52,9 @@ function ProjectsCommand({ organization }: OrganizationProps) {
 
   return (
     <List isLoading={isLoading} searchBarAccessory={<OrganizationDropdown />}>
-      <ProjectListSection projects={starred} title="Starred" onToggleBookmark={toggle} />
-      <ProjectListSection projects={mine} title="My Projects" onToggleBookmark={toggle} />
-      <ProjectListSection projects={other} title="Other" onToggleBookmark={toggle} />
+      <ProjectListSection organization={organization} projects={starred} title="Starred" onToggleBookmark={toggle} />
+      <ProjectListSection organization={organization} projects={mine} title="My Projects" onToggleBookmark={toggle} />
+      <ProjectListSection organization={organization} projects={other} title="Other" onToggleBookmark={toggle} />
     </List>
   );
 }
