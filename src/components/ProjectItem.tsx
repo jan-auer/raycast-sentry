@@ -1,6 +1,6 @@
-import { Action, ActionPanel, Clipboard, Color, Detail, Icon, List, showHUD } from "@raycast/api";
+import { Action, ActionPanel, Clipboard, Detail, Icon, List, showHUD } from "@raycast/api";
 import { Project, platformUrl } from "../hooks/useProjects";
-import { loadClientKeys, loadPrimaryDsn, useClientKeys } from "../hooks/useClientKeys";
+import { loadPrimaryDsn, useClientKeys } from "../hooks/useClientKeys";
 import { Organization } from "../api/base";
 import { useIssuesCount } from "../hooks/useIssues";
 
