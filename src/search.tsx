@@ -1,15 +1,18 @@
 import { Action, ActionPanel, Icon, List } from "@raycast/api";
-import { useOrganization } from "./hooks/useOrganizations";
 import { SavedSearch, useSearches } from "./hooks/useSearches";
 import { Organization, formatUrl } from "./api/base";
+import WithOrganization, { OrganizationProps } from "./components/WithOrganization";
+import { useProject } from "./hooks/useProjects";
+import ProjectDropdown from "./components/ProjectDropdown";
 
 type SearchItemProps = {
   organization: Organization;
+  project: string;
   search: SavedSearch;
 };
 
-function SearchItem({ organization, search }: SearchItemProps) {
-  const url = formatUrl(`issues/searches/${search.id}/`, organization, { sort: search.sort }, true);
+function SearchItem({ organization, project, search }: SearchItemProps) {
+  const url = formatUrl(`issues/searches/${search.id}/`, organization, { sort: search.sort, project }, true);
 
   return (
     <List.Item
@@ -36,16 +39,20 @@ function SearchItem({ organization, search }: SearchItemProps) {
   );
 }
 
-export default function Command() {
-  const [organization] = useOrganization();
+function SearchCommand({ organization }: OrganizationProps) {
+  const [optionalProject, setProject] = useProject();
+  const project = optionalProject || "-1";
   const { data, isLoading } = useSearches(organization);
 
   const saved = data?.filter((s) => !s.isGlobal);
   const recommended = data?.filter((s) => s.isGlobal);
-  const customUrl = formatUrl("issues/", organization, {}, true);
+  const customUrl = formatUrl("issues/", organization, { project }, true);
 
   return (
-    <List isLoading={isLoading}>
+    <List
+      isLoading={isLoading}
+      searchBarAccessory={<ProjectDropdown organization={organization} selected={project} onSelect={setProject} />}
+    >
       <List.Item
         title="Start custom search in Browser"
         icon={Icon.Globe}
@@ -55,17 +62,26 @@ export default function Command() {
           </ActionPanel>
         }
       />
-      {organization && (
+      {
         <>
           <List.Section title="Saved Searches">
-            {saved && saved.map((search) => <SearchItem key={search.id} organization={organization} search={search} />)}
+            {saved &&
+              saved.map((search) => (
+                <SearchItem key={search.id} organization={organization} project={project} search={search} />
+              ))}
           </List.Section>
           <List.Section title="Recommended Searches">
             {recommended &&
-              recommended.map((search) => <SearchItem key={search.id} organization={organization} search={search} />)}
+              recommended.map((search) => (
+                <SearchItem key={search.id} organization={organization} project={project} search={search} />
+              ))}
           </List.Section>
         </>
-      )}
+      }
     </List>
   );
+}
+
+export default function Command() {
+  return <WithOrganization>{(props) => <SearchCommand {...props} />}</WithOrganization>;
 }

@@ -29,7 +29,7 @@ export function formatUrl(
 ) {
   const host = organization ? organization.url : "https://sentry.io";
   const url = web ? `${host}/${path}` : `${host}/api/0/${path}`;
-  return query && query.length ? url + new URLSearchParams(query) : url;
+  return query && Object.keys(query).length ? url + "?" + new URLSearchParams(query) : url;
 }
 
 export function request(path: string, organization?: Organization, params: RequestInit = {}): Promise<Response> {
