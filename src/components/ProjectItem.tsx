@@ -11,7 +11,7 @@ export default function ProjectItem({ project, onToggleBookmark }: ProjectProps)
     <List.Item
       id={project.id}
       title={project.slug}
-      icon={{ source: project.urls.platform }}
+      icon={{ source: project.urls.platform, fallback: Icon.Tray }}
       accessories={project.isBookmarked ? [{ icon: Icon.Star }] : []}
       actions={
         <ActionPanel>

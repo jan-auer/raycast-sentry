@@ -31,8 +31,7 @@ function getPlatform(project: Project): string {
   return project.platforms.find((p) => p != "other") || project.platform || "other";
 }
 
-function platformUrl(project: Project): string {
-  let platform = getPlatform(project);
+export function platformUrl(platform: string): string {
   if (platform === "other") {
     platform = "default";
   }
@@ -43,7 +42,7 @@ function platformUrl(project: Project): string {
 function projectUrls(organization: Organization, project: Project): ProjectUrls {
   return {
     details: `${organization.url}/projects/${project.slug}/?project=${project.id}`,
-    platform: platformUrl(project),
+    platform: platformUrl(getPlatform(project)),
     issues: `${organization.url}/issues/?project=${project.id}`,
     alerts: `${organization.url}/alerts/rules/?project=${project.id}`,
     performance: `${organization.url}/performance/?project=${project.id}`,
@@ -69,7 +68,6 @@ export function useProjects(organization: Organization) {
         platforms: project.platforms,
         isBookmarked: project.isBookmarked,
         isMember: project.isMember,
-        platformUrl: platformUrl(project),
         urls: projectUrls(organization, project),
       }));
     },

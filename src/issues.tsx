@@ -19,7 +19,7 @@ function IssuesCommand({ organization }: OrganizationProps) {
     >
       <List.Section title={`Trending · ${total}`}>
         {issues?.map((issue) => (
-          <IssueItem key={issue.id} issue={issue} />
+          <IssueItem key={issue.id} issue={issue} showProject={!project || project === "-1"} />
         ))}
       </List.Section>
     </List>
