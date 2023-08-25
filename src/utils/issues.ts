@@ -4,7 +4,7 @@ import { getAvatarIcon } from "@raycast/utils";
 
 export function issueColor(level: IssueLevel) {
   if (level === "error") {
-    return "red";
+    return "rgb(245, 84, 89)";
   } else if (level === "warning") {
     return "rgb(245, 176, 0)";
   } else if (level === "info") {
@@ -16,7 +16,7 @@ export function issueColor(level: IssueLevel) {
 
 export function issueIcon(level: IssueLevel) {
   if (level === "error") {
-    return Icon.XMarkCircle;
+    return "fire.svg";
   } else if (level === "warning") {
     return Icon.Warning;
   } else if (level === "info") {
@@ -30,7 +30,7 @@ export function assigneeIcon(assignee: Assignee | null) {
   if (assignee?.type === "user") {
     return getAvatarIcon(assignee.name, { gradient: false });
   } else if (assignee?.type === "team") {
-    return getAvatarIcon(assignee.name, { gradient: false });
+    return getAvatarIcon(assignee.name, { gradient: false }).replace('r="50"', 'r="60"');
   } else {
     return Icon.Person;
   }

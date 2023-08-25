@@ -47,6 +47,7 @@ function IssueSection({ title, data, isLoading }: IssueSectionProps) {
           title={truncate(issue.title, 50)}
           icon={issueIcon(issue.level)}
           onAction={() => open(issue.permalink)}
+          subtitle={issue.project.slug}
         />
       ))}
 
