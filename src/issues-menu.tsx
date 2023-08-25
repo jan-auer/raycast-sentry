@@ -68,7 +68,11 @@ export default function Command() {
   const total = (review?.length || 0) + (regressed?.length || 0) + (escalating?.length || 0);
 
   return (
-    <MenuBarExtra icon={Icon.XMarkCircle} tooltip="Sentry Issues" title={total.toString()}>
+    <MenuBarExtra
+      icon={{ source: { light: "favicon.png", dark: "favicon-dark.png" } }}
+      tooltip="Sentry Issues"
+      title={total.toString()}
+    >
       <MenuBarExtra.Item
         title="Search Unresolved Issues"
         shortcut={{ modifiers: ["cmd"], key: "o" }}
