@@ -6,11 +6,7 @@ export function organizationAvatar(organization: Organization) {
   return organization.avatar ? { source: organization.avatar, mask: Image.Mask.RoundedRectangle } : Icon.Window;
 }
 
-type SwitchOrganizationProps = {
-  isGuard?: boolean;
-};
-
-export default function Command({ isGuard }: SwitchOrganizationProps) {
+export default function Command() {
   const { pop } = useNavigation();
 
   const [organization, setOrganization] = useOrganization();
@@ -18,9 +14,7 @@ export default function Command({ isGuard }: SwitchOrganizationProps) {
 
   function selectOrg(org: Organization) {
     setOrganization(org);
-    if (!isGuard) {
-      pop();
-    }
+    pop();
     showToast(Toast.Style.Success, `Switched to organization "${org.name}"`);
   }
 
