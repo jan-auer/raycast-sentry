@@ -2,6 +2,7 @@ import { ActionPanel, Color, Detail, Icon } from "@raycast/api";
 import { ApiIssue } from "../hooks/useIssues";
 import { assignee, assigneeIcon, issueColor, issueIcon, issueType, substatusColor } from "../utils/issues";
 import IssueActions from "./IssueActions";
+import { platformUrl } from "../hooks/useProjects";
 
 type IssueDetailsProps = {
   issue: ApiIssue;
@@ -50,7 +51,11 @@ ${issue.metadata.filename ? `#### Location\n${issue.metadata.filename}` : ""}
             icon={assigneeIcon(issue.assignedTo)}
           />
           <Detail.Metadata.Label title="Issue Slug" text={issue.shortId} icon={Icon.CopyClipboard} />
-          <Detail.Metadata.Label title="Project" text={issue.project.slug} icon={Icon.Tray} />
+          <Detail.Metadata.Label
+            title="Project"
+            text={issue.project.slug}
+            icon={{ source: platformUrl(issue.project.platform), fallback: Icon.Tray }}
+          />
         </Detail.Metadata>
       }
       actions={

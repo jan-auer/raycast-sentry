@@ -1,5 +1,6 @@
 import { Color, Icon } from "@raycast/api";
 import { Assignee, IssueLevel, IssueSubstatus, IssueType } from "../hooks/useIssues";
+import { getAvatarIcon } from "@raycast/utils";
 
 export function issueColor(level: IssueLevel) {
   if (level === "error") {
@@ -26,13 +27,10 @@ export function issueIcon(level: IssueLevel) {
 }
 
 export function assigneeIcon(assignee: Assignee | null) {
-  if (!assignee) {
-    return Icon.Circle;
-  }
-  if (assignee.type === "user") {
-    return Icon.PersonCircle;
-  } else if (assignee.type === "team") {
-    return Icon.TwoPeople;
+  if (assignee?.type === "user") {
+    return getAvatarIcon(assignee.name, { gradient: false });
+  } else if (assignee?.type === "team") {
+    return getAvatarIcon(assignee.name, { gradient: false });
   } else {
     return Icon.Person;
   }
