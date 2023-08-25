@@ -1,4 +1,15 @@
-import { Action, ActionPanel, Color, Icon, Image, List, Toast, showToast, useNavigation } from "@raycast/api";
+import {
+  Action,
+  ActionPanel,
+  Color,
+  Icon,
+  Image,
+  List,
+  Toast,
+  clearSearchBar,
+  showToast,
+  useNavigation,
+} from "@raycast/api";
 import { useOrganization, useOrganizations } from "./hooks/useOrganizations";
 import { Organization } from "./api/base";
 
@@ -18,7 +29,9 @@ export default function Command({ isGuard }: SwitchOrganizationProps) {
 
   function selectOrg(org: Organization) {
     setOrganization(org);
-    if (!isGuard) {
+    if (isGuard) {
+      clearSearchBar();
+    } else {
       pop();
     }
     showToast(Toast.Style.Success, `Switched to organization "${org.name}"`);
