@@ -41,7 +41,7 @@ export function assignee(assignee: Assignee | null) {
     return "Unassigned";
   }
 
-  return assignee.type === "team" ? `${assignee.name} (Team)` : assignee.name;
+  return assignee.type === "team" ? "#" + assignee.name : assignee.name;
 }
 
 export function substatusColor(substatus: IssueSubstatus) {
